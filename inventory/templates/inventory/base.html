@@ -1,0 +1,18 @@
+{% load static %}
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Estoque Infra · Agricopel</title>
+<link rel="icon" type="image/svg+xml" sizes="any" href="{% static 'inventory/favicon.svg' %}">
+<link rel="stylesheet" href="{% static 'inventory/header.css' %}"><link rel="stylesheet" href="{% static 'inventory/app.css' %}"></head><body>
+<a class="skip-link" href="#main-content">Ir para o conteúdo</a>
+<header class="site-header"><div class="header-inner">
+<div class="brand"><span class="brand-mark"><img src="{% static 'inventory/agricopel-reference.png' %}" alt="Agricopel" width="415" height="310"></span><span class="brand-caption"><strong>Estoque Infra</strong><span>Gestão de equipamentos</span></span></div>
+{% if user.is_authenticated %}
+<div class="user-menu"><span class="user-avatar" aria-hidden="true">{{ user.get_username|first|upper }}</span><span class="user-name">{{ user.get_full_name|default:user.get_username }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="logout-button">Sair <span aria-hidden="true">↗</span></button></form></div>
+{% else %}<span class="access-label">Portal de infraestrutura</span>{% endif %}
+</div>
+{% if user.is_authenticated %}<div class="navigation-wrap"><nav class="header-nav" aria-label="Navegação principal">
+{% if perms.inventory.view_balance and perms.inventory.view_asset %}<a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>Estoque</a>{% endif %}
+{% if perms.inventory.add_movement %}<a href="{% url 'movement-new' %}" {% if request.resolver_match.url_name == 'movement-new' %}aria-current="page"{% endif %}>Movimentar</a>{% endif %}
+{% if perms.inventory.view_movement %}<a href="{% url 'history' %}" {% if request.resolver_match.url_name == 'history' %}aria-current="page"{% endif %}>Histórico</a>{% endif %}
+{% if perms.inventory.view_branch or perms.inventory.view_item or perms.inventory.view_asset %}<a href="{% url 'catalog-index' %}" {% if request.resolver_match.url_name|slice:':8' == 'catalog-' %}aria-current="page"{% endif %}>Cadastros</a>{% endif %}
+</nav></div>{% endif %}</header>
+<main id="main-content">{% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}<footer>Estoque de infraestrutura · Filiais, equipamentos e movimentações</footer></main></body></html>

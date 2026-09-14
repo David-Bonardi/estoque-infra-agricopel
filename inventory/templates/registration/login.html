@@ -1,0 +1,1 @@
+{% extends 'inventory/base.html' %}{% block content %}<section class="card entry login"><h1>Acesse o estoque</h1><p class="muted">Entre com o usuário fornecido pelo administrador.</p><form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button>Entrar</button></form></section>{% endblock %}

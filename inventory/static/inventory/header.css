@@ -1,0 +1,27 @@
+/* Display only the logo strip from the supplied reference, preserving its pixels. */
+.catalog-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}.eyebrow{font-size:11px;font-weight:700;letter-spacing:1.4px;color:#766b60;margin:18px 0 6px}.catalog-heading h1{margin-top:0}.catalog-button{display:inline-block;text-decoration:none;background:#ffcc19;color:#28211e;border:1px solid #e2b20b;padding:12px 18px;border-radius:7px;font-weight:650;white-space:nowrap}.catalog-button:hover{background:#f0be08}.catalog-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}.catalog-tabs a{padding:10px 18px;text-decoration:none;background:#e8ecef;color:#475762;border-radius:6px;font-size:14px}.catalog-tabs a[aria-current=page]{background:#28211e;color:#ffcc19}.catalog-count{font-size:13px;color:#526675;margin-bottom:18px}.status-pill{display:inline-block;border-radius:20px;padding:4px 10px;background:#e5f3eb;color:#246847;font-size:12px}.status-pill.inactive{background:#eeece9;color:#6b6258}.catalog-empty{text-align:center;padding:38px 16px;color:#526675}.catalog-form input[type=checkbox]{width:18px;height:18px;accent-color:#806400}.catalog-form input:disabled,.catalog-form select:disabled{background:#f0f2f4;color:#586674}.catalog-hint{background:#fff8dd;border-left:3px solid #ffcc19;padding:14px;font-size:14px;line-height:1.6}.form-actions{display:flex;align-items:center;gap:22px;margin-top:28px}.back-link{font-size:13px}.catalog-tabs a:focus-visible,.catalog-button:focus-visible{outline:2px solid #806400;outline-offset:3px}
+.site-header{display:block;padding:0;background:#28211e;color:#fff;border-top:4px solid #ffcc19;box-shadow:0 4px 18px #241f1915}
+.header-inner{max-width:1250px;margin:auto;padding:25px 20px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:24px;flex-shrink:0}
+.brand-mark{position:relative;display:block;width:196px;aspect-ratio:293 / 66;overflow:hidden;flex-shrink:0;background:#ffcc19}
+.brand-mark img{position:absolute;width:141.638%;height:auto;max-width:none;left:-20.819%;top:-174.242%}
+.brand-caption{display:flex;flex-direction:column;gap:4px;border-left:1px solid #ffffff29;padding-left:24px}
+.brand-caption strong{font-size:18px;font-weight:650;letter-spacing:-.3px}
+.brand-caption>span{font-size:12px;color:#c4bcb7;letter-spacing:.3px}
+.user-menu{display:flex;gap:12px;align-items:center;min-width:0}
+.user-avatar{display:grid;place-items:center;width:34px;height:34px;flex-shrink:0;border:1px solid #ffcc1959;border-radius:50%;background:#ffcc1914;color:#ffcc19;font-size:13px;font-weight:700}
+.user-name{font-size:13px;color:#e7e2df;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-header .logout-button{background:transparent;color:#ddd5cf;border:1px solid #ffffff29;padding:8px 12px;font-size:12px;border-radius:6px;white-space:nowrap}
+.site-header .logout-button:hover{color:#ffcc19;border-color:#ffcc19}
+.logout-button span{margin-left:8px}
+.access-label{color:#c4bcb7;font-size:12px}
+.navigation-wrap{border-top:1px solid #ffffff12;background:#211b18}
+.header-nav{max-width:1250px;margin:auto;padding:0 20px;display:flex;gap:28px;align-items:stretch;flex-wrap:wrap}
+.header-nav a{display:flex;gap:8px;align-items:center;min-height:49px;padding:0 2px;text-decoration:none;font-size:13px;font-weight:550;color:#cfc6c0;border-bottom:3px solid transparent;transition:color .15s,background .15s}
+.header-nav a:hover{color:#fff}
+.header-nav a[aria-current="page"]{color:#ffcc19;border-bottom-color:#ffcc19}
+.site-header :focus-visible{outline:2px solid #ffcc19;outline-offset:4px}
+.skip-link{position:absolute;left:16px;top:-100px;padding:12px;background:#ffcc19;color:#211b18;z-index:10}
+.skip-link:focus{top:12px}
+@media(max-width:760px){.header-inner{padding:20px;flex-wrap:wrap;gap:18px}.brand{gap:16px}.brand-mark{width:164px}.brand-caption{padding-left:16px}.brand-caption strong{font-size:16px}.user-menu{margin-left:auto}.header-nav{gap:20px}.access-label{display:none}}
+@media(max-width:420px){.header-inner{padding:18px 16px}.brand{gap:12px}.brand-mark{width:145px}.brand-caption{padding-left:12px}.brand-caption>span{font-size:10px}.brand-caption strong{font-size:15px}.header-nav{padding:0 16px;column-gap:20px;row-gap:0}.header-nav a{font-size:12px;min-height:44px}.user-menu{margin-left:0;width:100%}.user-menu form{margin-left:auto}.user-name{max-width:210px}}

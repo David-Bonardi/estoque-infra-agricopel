@@ -1,0 +1,6 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<a href="{% url 'catalog-list' kind %}" class="back-link">← Voltar para {{ title|lower }}</a><p class="eyebrow">CADASTROS / {{ title|upper }}</p><h1>{% if record %}Editar{% else %}Novo{% endif %} cadastro de {{ singular }}</h1>
+<p class="muted">{% if kind == 'equipamentos' %}A localização do equipamento é definida pelas movimentações de estoque.{% else %}Mantenha os dados atualizados para facilitar o trabalho da equipe.{% endif %}</p>
+<section class="card entry catalog-form">{% if kind == 'equipamentos' %}<div class="catalog-hint">{% if record %}Filial atual: <strong>{{ record.branch|default:"Fora do estoque / aguardando entrada" }}</strong>.{% else %}Após salvar, registre uma entrada para alocar este equipamento em uma filial.{% endif %}</div>{% endif %}
+<form method="post">{% csrf_token %}{{ form.as_p }}<div class="form-actions"><button class="catalog-button">Salvar cadastro</button><a class="button button-secondary" href="{% url 'catalog-list' kind %}">Cancelar</a></div></form></section>{% endblock %}

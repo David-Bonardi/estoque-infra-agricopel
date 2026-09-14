@@ -1,0 +1,9 @@
+{% extends 'inventory/base.html' %}{% load static %}
+{% block content %}<h1>Registrar movimentação</h1><p class="muted">Escolha a movimentação e o item para preencher os dados necessários.</p>
+<section class="card entry"><form method="post" id="movement-form">{% csrf_token %}
+{{ form.non_field_errors }}
+{% for field in form %}<p data-field="{{ field.name }}">{{ field.label_tag }}{{ field }}{% if field.help_text %}<span class="helptext" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</span>{% endif %}{% for error in field.errors %}<span class="errorlist" role="alert">{{ error }}</span>{% endfor %}</p>{% endfor %}
+<p id="movement-hint" class="catalog-hint" role="status" aria-live="polite" hidden></p>
+<button type="submit">Registrar movimentação</button>
+</form></section><p class="muted">Para corrigir um lançamento, registre a movimentação inversa e indique o lançamento original no motivo.</p>
+<script src="{% static 'inventory/movement.js' %}" defer></script>{% endblock %}
