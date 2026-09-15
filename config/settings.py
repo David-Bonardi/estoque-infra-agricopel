@@ -12,21 +12,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from .environment import load_local_environment, required_environment
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_local_environment(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s=xe0exxydhcqm!c@4_9t2-o4g*%wt%3$4(0w!eq4ix7nhe94u'
+SECRET_KEY = required_environment('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '0') == '1'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [host.strip() for host in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',') if host.strip()]
 
 
 # Application definition
@@ -78,11 +80,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'estoque',
-        'USER': 'postgres',
-        'PASSWORD': 'manager',
-        'HOST': 'localhost',
-        'PORT': 5432,
+        'NAME': os.environ.get('DB_NAME', 'estoque'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': required_environment('DB_PASSWORD') if os.environ.get('USE_SQLITE') != '1' else '',
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
