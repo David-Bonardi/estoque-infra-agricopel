@@ -1,7 +1,7 @@
 (() => {
   const form = document.getElementById('movement-form');
   if (!form) return;
-  const fields = Object.fromEntries(['kind', 'item', 'source', 'destination', 'asset', 'quantity'].map(name => [name, form.elements.namedItem(name)]));
+  const fields = Object.fromEntries(['kind', 'item', 'source', 'destination', 'asset', 'quantity', 'recipient', 'recipient_department'].map(name => [name, form.elements.namedItem(name)]));
   const assetOptions = Array.from(fields.asset.options, option => option.cloneNode(true));
   const hint = document.getElementById('movement-hint');
 
@@ -18,6 +18,8 @@
     const individual = tracking === 'individual';
     show('source', kind === 'exit' || kind === 'transfer');
     show('destination', kind === 'entry' || kind === 'transfer');
+    show('recipient', kind === 'exit' || kind === 'transfer', false);
+    show('recipient_department', kind === 'exit' || kind === 'transfer', false);
     show('asset', individual);
     show('quantity', tracking === 'quantity');
     if (individual) fields.quantity.value = '1';

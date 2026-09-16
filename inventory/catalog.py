@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.admin.models import ADDITION, CHANGE, LogEntry
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
@@ -7,8 +7,8 @@ from django.db import transaction
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from .forms import AssetForm, BranchForm, ItemForm
-from .models import Asset, Branch, Item
+from .forms import AssetForm, BranchForm, ItemForm, StockDetailsForm
+from .models import Asset, Balance, Branch, Item
 
 
 CATALOGS = {
@@ -17,10 +17,10 @@ CATALOGS = {
                 'search': ('code', 'name')},
     'itens': {'model': Item, 'form': ItemForm, 'title': 'Tipos de item', 'singular': 'tipo de item',
               'description': 'Defina quais materiais e equipamentos a equipe controla.',
-              'search': ('name',)},
+              'search': ('name', 'category', 'notes')},
     'equipamentos': {'model': Asset, 'form': AssetForm, 'title': 'Equipamentos', 'singular': 'equipamento',
                      'description': 'Identifique cada equipamento por patrimônio e número de série.',
-                     'search': ('tag', 'serial', 'item__name', 'branch__name', 'branch__code')},
+                     'search': ('tag', 'serial', 'item__name', 'item__category', 'branch__name', 'branch__code', 'location', 'notes')},
 }
 
 
@@ -83,3 +83,19 @@ def edit(request, kind, pk=None):
         return redirect('catalog-new', kind=kind)
     context.update(form=form, record=instance)
     return render(request, 'inventory/catalog_form.html', context)
+
+
+@login_required
+@permission_required('inventory.change_balance', raise_exception=True)
+@transaction.atomic
+def stock_details(request, pk):
+    balance = get_object_or_404(Balance.objects.select_for_update().select_related('branch', 'item'), pk=pk)
+    form = StockDetailsForm(request.POST if request.method == 'POST' else None, instance=balance)
+    if request.method == 'POST' and form.is_valid():
+        record = form.save(commit=False)
+        record.save(update_fields=['location', 'condition', 'notes'])
+        LogEntry.objects.log_actions(user_id=request.user.pk, queryset=[record], action_flag=CHANGE,
+            change_message=[{'changed': {'fields': form.changed_data}}])
+        messages.success(request, 'Detalhes do estoque atualizados.')
+        return redirect('dashboard')
+    return render(request, 'inventory/stock_details.html', {'form': form, 'balance': balance})

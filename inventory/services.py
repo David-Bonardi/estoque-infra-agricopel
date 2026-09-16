@@ -5,7 +5,8 @@ from .models import Asset, Balance, Branch, Item, Movement
 
 
 @transaction.atomic
-def record_movement(*, actor, kind, item, quantity, source=None, destination=None, asset=None, reason):
+def record_movement(*, actor, kind, item, quantity, source=None, destination=None, asset=None, reason,
+                    recipient='', recipient_department=''):
     if not actor.is_active or not actor.has_perm('inventory.add_movement'):
         raise PermissionDenied
     # Serialize movements of the same item, including creation of its first balance.
@@ -28,16 +29,19 @@ def record_movement(*, actor, kind, item, quantity, source=None, destination=Non
     reason = reason.strip()
     if not reason:
         raise ValidationError('Informe o motivo ou chamado.')
+    recipient = recipient.strip() if kind != Movement.Kind.ENTRY else ''
+    recipient_department = recipient_department.strip() if kind != Movement.Kind.ENTRY else ''
     if item.tracking == Item.Tracking.INDIVIDUAL:
         if not asset or quantity != 1:
             raise ValidationError('Selecione um equipamento e informe quantidade 1.')
         asset = Asset.objects.select_for_update().get(pk=asset.pk)
-        if asset.item_id != item.pk:
+        if asset.item_id != item.pk: # type: ignore
             raise ValidationError('O equipamento não pertence ao tipo de item informado.')
-        if asset.branch_id != (source.pk if source else None):
+        if asset.branch_id != (source.pk if source else None): # type: ignore
             raise ValidationError('A origem não corresponde à localização atual do equipamento.')
         asset.branch = destination
-        asset.save(update_fields=['branch'])
+        asset.location = ''
+        asset.save(update_fields=['branch', 'location'])
     else:
         if asset:
             raise ValidationError('Itens por quantidade não usam patrimônio.')
@@ -50,9 +54,12 @@ def record_movement(*, actor, kind, item, quantity, source=None, destination=Non
         if destination:
             balance, _ = Balance.objects.get_or_create(item=item, branch=destination)
             balance.quantity += quantity
-            balance.save(update_fields=['quantity'])
+            # New units have not yet been checked against the condition of the old batch.
+            balance.condition = 'unknown'
+            balance.save(update_fields=['quantity', 'condition'])
     movement = Movement(kind=kind, item=item, asset=asset, quantity=quantity, source=source,
-                        destination=destination, reason=reason, actor=actor)
+                        destination=destination, reason=reason, actor=actor,
+                        recipient=recipient, recipient_department=recipient_department)
     movement.full_clean()
     movement.save()
     return movement

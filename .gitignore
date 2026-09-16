@@ -6,3 +6,10 @@ __pycache__/
 !.env.example
 *.sqlite3
 staticfiles/
+releases/
+backups/
+servico/
+*.dump
+dados-estoque-servidor*.json
+versao-instalada.json
+.deploy.lock

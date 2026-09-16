@@ -10,6 +10,8 @@ Controle de estoque em Django 5.2, com páginas Django Templates e telas própri
 - Entradas, saídas e transferências atômicas, com bloqueio de saldo insuficiente.
 - Histórico com usuário, data, quantidade, origem, destino e motivo.
 - Login, logout por POST, proteção CSRF e permissões por grupo.
+- Categoria e observações no tipo de item; condição, localização interna e observações no equipamento e no saldo por filial.
+- Destinatário e setor opcionais em saídas e transferências, separados do usuário que registra a operação.
 - Saldos e histórico somente para consulta no Admin; localização alterada por movimentações.
 
 ## Executar no PowerShell
@@ -25,7 +27,7 @@ Dentro da pasta do projeto:
 ```
 
 Acesse http://127.0.0.1:8000/ e entre com o usuário criado. Cadastros ficam em `/cadastros/`, integrados ao sistema.
-O PostgreSQL usa a configuração local existente em `config/settings.py`.
+O PostgreSQL usa variáveis de ambiente ou o arquivo local `.env`, conforme `CONFIGURACAO.md`. Cada ambiente deve ter seu próprio banco e suas próprias credenciais.
 Para uma demonstração isolada com SQLite, execute `$env:USE_SQLITE = '1'` antes dos comandos acima.
 
 ## Primeiro uso
@@ -42,6 +44,14 @@ O Django Admin permanece como ferramenta técnica exclusiva de superusuários. U
 Criações e alterações de cadastro feitas nas novas telas também registram o usuário responsável no log técnico do Django. Saldos e localização continuam sendo alterados apenas por movimentações. Os cadastros oferecem inativação de filiais e tipos de item; não oferecem exclusão.
 
 Os grupos têm acesso global às filiais; restrições por filial não foram implementadas nesta versão.
+
+Em Estoque, use “Editar detalhes” para registrar prateleira/localização, condição e observações dos materiais daquela filial. Essa tela não altera quantidade, item ou filial. Para patrimônios, os detalhes ficam em Cadastros → Equipamentos; a localização interna só pode ser preenchida depois da entrada em uma filial e é limpa ao movimentar o equipamento. Condição e observações do patrimônio são preservadas.
+
+Para materiais por quantidade, a condição descreve o conjunto, sem contagem separada de unidades utilizáveis. Use “Condições variadas” e detalhe as quantidades nas observações quando necessário. Novas entradas ou transferências recebidas deixam a condição do saldo como “Não informado”, para conferir o conjunto após receber novas unidades. A localização e as observações permanecem. Condição ainda não bloqueia movimentações nem calcula disponibilidade para uso.
+
+Na movimentação, o destinatário é texto livre e não precisa ter usuário no sistema. Os campos aparecem apenas em saídas e transferências. O histórico permite buscar por destinatário e setor e mantém “Registrado por” separado.
+
+A carga inicial da planilha legada já foi realizada na implantação, com os saldos finais na filial 00 — base. Notebooks e monitores sem patrimônio começaram por quantidade. Não reimporte essa carga durante atualizações do sistema nem some novamente as movimentações antigas aos saldos.
 Uma saída remove o item do estoque da filial; para equipamentos, a localização fica vazia.
 Correções são novas movimentações inversas, com referência ao ID original no motivo. Não há edição/exclusão do histórico pelas telas.
 Os bloqueios do histórico são da aplicação: administradores com acesso direto ao banco podem alterar registros.
@@ -57,3 +67,7 @@ Esse comando usa SQLite em memória, sem alterar o PostgreSQL. Para validar no P
 ## Antes de publicar
 
 A configuração inicial é de desenvolvimento. Configure segredos fora do código, DEBUG=False, ALLOWED_HOSTS, HTTPS, arquivos estáticos e backup do PostgreSQL antes de colocar em produção. O servidor `runserver` serve apenas para desenvolvimento.
+
+## Atualizar a instalação Windows
+
+Consulte [ATUALIZACAO.md](ATUALIZACAO.md) para gerar um pacote de um commit Git e publicar no servidor instalado. O atualizador faz backup antes de substituir o código e preserva o `.env`, o serviço e os dados de produção. A implantação atual usa IIS, Waitress e WhiteNoise; HTTPS e backup diário externo ainda precisam ser configurados.

@@ -5,7 +5,7 @@ INVENTORY_PERMISSIONS = (
     'view_branch', 'add_branch', 'change_branch',
     'view_item', 'add_item', 'change_item',
     'view_asset', 'add_asset', 'change_asset',
-    'view_balance', 'view_movement', 'add_movement',
+    'view_balance', 'change_balance', 'view_movement', 'add_movement',
 )
 
 

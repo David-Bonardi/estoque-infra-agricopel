@@ -1,0 +1,5 @@
+{% extends 'inventory/base.html' %}{% block content %}
+<a href="{% url 'dashboard' %}" class="back-link">← Voltar ao estoque</a>
+<h1>Detalhes do estoque</h1><p class="muted">{{ balance.item }} · {{ balance.branch }}</p>
+<section class="card entry"><div class="catalog-hint">Saldo físico: <strong>{{ balance.quantity }} unidade(s)</strong>. A condição descreve esse conjunto; ela não indica uma quantidade disponível para uso. O saldo é alterado pelas movimentações.</div>
+<form method="post">{% csrf_token %}{{ form.as_p }}<div class="form-actions"><button>Salvar detalhes</button><a class="button button-secondary" href="{% url 'dashboard' %}">Cancelar</a></div></form></section>{% endblock %}

@@ -21,6 +21,7 @@ from inventory import catalog
 from django.urls import path
 
 urlpatterns = [
+    path('estoque/<int:pk>/detalhes/', catalog.stock_details, name='stock-details'),
     path('cadastros/', catalog.index, name='catalog-index'),
     path('cadastros/<slug:kind>/', catalog.listing, name='catalog-list'),
     path('cadastros/<slug:kind>/novo/', catalog.edit, name='catalog-new'),
