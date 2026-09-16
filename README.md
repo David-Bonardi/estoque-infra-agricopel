@@ -10,6 +10,7 @@ Controle de estoque em Django 5.2, com páginas Django Templates e telas própri
 - Entradas, saídas e transferências atômicas, com bloqueio de saldo insuficiente.
 - Histórico com usuário, data, quantidade, origem, destino e motivo.
 - Login, logout por POST, proteção CSRF e permissões por grupo.
+- Troca da própria senha pelo menu “Trocar senha”, com senha atual, confirmação e validação da nova senha, sem acesso ao Admin. A sessão atual permanece conectada; outras sessões precisam entrar novamente.
 - Categoria e observações no tipo de item; condição, localização interna e observações no equipamento e no saldo por filial.
 - Destinatário e setor opcionais em saídas e transferências, separados do usuário que registra a operação.
 - Saldos e histórico somente para consulta no Admin; localização alterada por movimentações.

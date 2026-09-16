@@ -14,5 +14,5 @@
 {% if perms.inventory.add_movement %}<a href="{% url 'movement-new' %}" {% if request.resolver_match.url_name == 'movement-new' %}aria-current="page"{% endif %}>Movimentar</a>{% endif %}
 {% if perms.inventory.view_movement %}<a href="{% url 'history' %}" {% if request.resolver_match.url_name == 'history' %}aria-current="page"{% endif %}>Histórico</a>{% endif %}
 {% if perms.inventory.view_branch or perms.inventory.view_item or perms.inventory.view_asset %}<a href="{% url 'catalog-index' %}" {% if request.resolver_match.url_name|slice:':8' == 'catalog-' %}aria-current="page"{% endif %}>Cadastros</a>{% endif %}
-</nav></div>{% endif %}</header>
+<a href="{% url 'password_change' %}" {% if request.resolver_match.url_name == 'password_change' or request.resolver_match.url_name == 'password_change_done' %}aria-current="page"{% endif %}>Trocar senha</a></nav></div>{% endif %}</header>
 <main id="main-content">{% for message in messages %}<p class="notice" role="status">{{ message }}</p>{% endfor %}{% block content %}{% endblock %}<footer>Estoque de infraestrutura · Filiais, equipamentos e movimentações</footer></main></body></html>
