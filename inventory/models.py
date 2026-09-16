@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 
 
@@ -13,7 +14,9 @@ class Condition(models.TextChoices):
 
 
 class Branch(models.Model):
-    code = models.CharField('código', max_length=30, unique=True)
+    code = models.CharField('código', max_length=30, unique=True, validators=[
+        RegexValidator(r'\A[0-9]+\Z', 'Informe somente números de 0 a 9 no código da filial.')
+    ])
     name = models.CharField('nome', max_length=150)
     active = models.BooleanField('ativa', default=True)
 
@@ -56,7 +59,7 @@ class Item(models.Model):
 
 class Asset(models.Model):
     item = models.ForeignKey(Item, verbose_name='tipo de item', on_delete=models.PROTECT, related_name='assets')
-    tag = models.CharField('patrimônio', max_length=80, unique=True)
+    tag = models.CharField('patrimônio', max_length=80, unique=True, null=True, blank=True)
     serial = models.CharField('número de série', max_length=120, unique=True, null=True, blank=True)
     branch = models.ForeignKey(Branch, verbose_name='filial atual', on_delete=models.PROTECT, null=True, blank=True)
     location = models.CharField('localização interna', max_length=120, blank=True)
@@ -69,14 +72,19 @@ class Asset(models.Model):
         verbose_name_plural = 'equipamentos'
 
     def clean(self):
+        self.tag = self.tag.strip() or None if self.tag else None
         self.serial = self.serial.strip() or None if self.serial else None
         if self.item_id and self.item.tracking != Item.Tracking.INDIVIDUAL: # type: ignore
             raise ValidationError('Equipamentos exigem um tipo de item com controle individual.')
         if self.pk and Asset.objects.get(pk=self.pk).item_id != self.item_id: # type: ignore
             raise ValidationError('O tipo de um equipamento cadastrado não pode ser alterado.')
 
+    @property
+    def display_identifier(self):
+        return self.tag or (f'Sem patrimônio · cadastro #{self.pk}' if self.pk else 'Sem patrimônio')
+
     def __str__(self):
-        return f'{self.tag} — {self.item}'
+        return f'{self.display_identifier} — {self.item}'
 
 
 class Balance(models.Model):

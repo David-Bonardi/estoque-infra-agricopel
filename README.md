@@ -4,9 +4,9 @@ Controle de estoque em Django 5.2, com páginas Django Templates e telas própri
 
 ## Funcionalidades
 
-- Filiais identificadas por código único, com busca e filtros.
+- Filiais identificadas por código numérico único, preservando zeros à esquerda, com busca e filtros.
 - Tipos de item com controle por quantidade ou patrimônio individual.
-- Equipamentos com patrimônio único e número de série opcional e único.
+- Equipamentos com patrimônio e número de série opcionais, únicos quando preenchidos. Sem patrimônio, as telas identificam o equipamento pelo número do cadastro.
 - Entradas, saídas e transferências atômicas, com bloqueio de saldo insuficiente.
 - Histórico com usuário, data, quantidade, origem, destino e motivo.
 - Login, logout por POST, proteção CSRF e permissões por grupo.

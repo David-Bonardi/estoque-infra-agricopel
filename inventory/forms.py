@@ -6,6 +6,11 @@ class BranchForm(forms.ModelForm):
     class Meta:
         model = Branch
         fields = ('code', 'name', 'active')
+        widgets = {'code': forms.TextInput(attrs={
+            'inputmode': 'numeric', 'pattern': '[0-9]+',
+            'data-numeric-code': '', 'title': 'Use somente números de 0 a 9.',
+        })}
+        help_texts = {'code': 'Somente números. Zeros à esquerda são mantidos, como 00 e 001.'}
 
 
 class ItemForm(forms.ModelForm):
@@ -35,7 +40,8 @@ class AssetForm(forms.ModelForm):
             self.fields['item'].queryset = Item.objects.filter(pk=self.instance.item_id)
         else:
             self.fields['item'].queryset = Item.objects.filter(active=True, tracking=Item.Tracking.INDIVIDUAL)
-        self.fields['tag'].help_text = 'Identificação única do patrimônio da empresa.'
+        self.fields['tag'].help_text = 'Opcional. Pode ser preenchido depois; quando informado, deve ser único.'
+        self.fields['serial'].help_text = 'Opcional. Pode ser preenchido depois.'
         self.fields['condition'].required = False
         self.fields['location'].help_text = 'Ex.: prateleira A, bancada ou escritório. Preencha após alocar em uma filial.'
         if not self.instance.branch_id:
